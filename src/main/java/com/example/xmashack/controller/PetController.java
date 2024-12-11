@@ -1,9 +1,9 @@
 package com.example.xmashack.controller;
 
 import com.example.xmashack.domain.Pet;
-import com.example.xmashack.domain.PetOwner;
-import com.example.xmashack.repository.PetOwnerRepository;
 import com.example.xmashack.repository.PetRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -35,6 +35,13 @@ public class PetController {
             return petRepository.getAllPetsForOwnerId(petOwnerId);
         }
         return petRepository.getAllPets();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePet(@PathVariable String id) {
+        petRepository.deletePet(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
     }
 
 

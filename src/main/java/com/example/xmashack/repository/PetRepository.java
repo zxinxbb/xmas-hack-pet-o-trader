@@ -1,9 +1,7 @@
 package com.example.xmashack.repository;
 
 import com.example.xmashack.domain.Pet;
-import com.example.xmashack.domain.PetOwner;
 import com.example.xmashack.exception.ResourceNotFoundException;
-import com.example.xmashack.generated.tables.records.PetOwnerRecord;
 import com.example.xmashack.generated.tables.records.PetRecord;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -16,7 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import static com.example.xmashack.generated.Tables.PET_OWNER;
 import static com.example.xmashack.generated.tables.Pet.PET;
 
 @Repository
@@ -42,12 +39,12 @@ public class PetRepository {
         petRecord.setImagepath(pet.getImagePath());
         petRecord.setPetownerid(pet.getPetOwnerId());
 
-       PetRecord returnedPetRecord = dslContext.insertInto(PET).set(petRecord).returning().fetchOne();
+        PetRecord returnedPetRecord = dslContext.insertInto(PET).set(petRecord).returning().fetchOne();
 
-       return new Pet (returnedPetRecord.getId(),returnedPetRecord.getName()
-               ,returnedPetRecord.getDescription(),returnedPetRecord.getType()
-               ,returnedPetRecord.getAge(),returnedPetRecord.getImagepath()
-               ,returnedPetRecord.getPetownerid());
+        return new Pet(returnedPetRecord.getId(), returnedPetRecord.getName()
+                , returnedPetRecord.getDescription(), returnedPetRecord.getType()
+                , returnedPetRecord.getAge(), returnedPetRecord.getImagepath()
+                , returnedPetRecord.getPetownerid());
     }
 
     public Pet getPetById(String id) {
@@ -59,7 +56,7 @@ public class PetRepository {
         }
     }
 
-    public Collection<Pet> getAllPetsForOwnerId (String PetOwnerId){
+    public Collection<Pet> getAllPetsForOwnerId(String PetOwnerId) {
         SelectJoinStep<Record> select = dslContext.select(PET.fields()).from(PET);
 
         return select
@@ -75,6 +72,12 @@ public class PetRepository {
                 .where(conditions)
                 .orderBy(PET.NAME.asc()).fetchInto(Pet.class);
 
+    }
+
+    public void deletePet(String id) {
+        dslContext.delete(PET)
+                .where(PET.ID.eq(id))
+                .execute();
     }
 
 

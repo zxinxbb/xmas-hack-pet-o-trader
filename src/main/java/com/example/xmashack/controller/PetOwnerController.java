@@ -19,19 +19,15 @@ public class PetOwnerController {
     @PostMapping
     public PetOwner createPetOwner(@RequestBody PetOwner petOwner) {
         return petOwnerRepository.insertPetOwner(petOwner);
-
     }
 
     @GetMapping("/{id}")
     public PetOwner getPetOwner(@PathVariable String id) {
         return petOwnerRepository.getPetOwnerById(id);
-
     }
 
     @GetMapping
     public Collection<PetOwner> findAllPetOwners() {
         return petOwnerRepository.getAllPetOwners();
     }
-
-
 }

@@ -1,8 +1,6 @@
 package com.example.xmashack.domain;
 
 
-import lombok.Getter;
-
 public class PetOwner {
 
     private String id;

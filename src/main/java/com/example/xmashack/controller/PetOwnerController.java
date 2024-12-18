@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")  // Allow requests from the Angular app
+
 @RequestMapping("/api/petowners")
 public class PetOwnerController {
 

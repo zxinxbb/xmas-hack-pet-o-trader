@@ -5,11 +5,15 @@ import com.example.xmashack.repository.PetRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/pets")
+@CrossOrigin(origins = "http://localhost:4200")
+
 public class PetController {
 
     private final PetRepository petRepository;
@@ -19,9 +23,15 @@ public class PetController {
     }
 
     @PostMapping
-    public Pet createPet(@RequestBody Pet pet) {
-        return petRepository.insertPet(pet);
+    public ResponseEntity<Pet> createPet(
+            @RequestPart Pet pet,
+            @RequestPart MultipartFile image) throws IOException {
+
+        Pet savedPet = petRepository.insertPet(pet, image);
+
+        return ResponseEntity.ok(savedPet);
     }
+
 
     @GetMapping("/{id}")
     public Pet getPet(@PathVariable String id) {
@@ -44,5 +54,5 @@ public class PetController {
 
     }
 
-
 }
+

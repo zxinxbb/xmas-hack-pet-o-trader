@@ -16,4 +16,6 @@ public class Pet {
     private final String imagePath;
     private final String petOwnerId;
 
+    private byte[] image;
+
 }

@@ -8,7 +8,9 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.SelectJoinStep;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +27,7 @@ public class PetRepository {
         this.dslContext = dslContext;
     }
 
-    public Pet insertPet(Pet pet) {
+    public Pet insertPet(Pet pet, MultipartFile image) throws IOException {
         PetRecord petRecord = new PetRecord();
         if (pet.getId() == null) {
             petRecord.setId(UUID.randomUUID().toString().replace("-", ""));
@@ -38,19 +40,20 @@ public class PetRepository {
         petRecord.setAge(pet.getAge());
         petRecord.setImagepath(pet.getImagePath());
         petRecord.setPetownerid(pet.getPetOwnerId());
+        petRecord.setImage(image.getBytes());
 
         PetRecord returnedPetRecord = dslContext.insertInto(PET).set(petRecord).returning().fetchOne();
 
         return new Pet(returnedPetRecord.getId(), returnedPetRecord.getName()
                 , returnedPetRecord.getDescription(), returnedPetRecord.getType()
                 , returnedPetRecord.getAge(), returnedPetRecord.getImagepath()
-                , returnedPetRecord.getPetownerid());
+                , returnedPetRecord.getPetownerid(), returnedPetRecord.getImage());
     }
 
     public Pet getPetById(String id) {
         PetRecord petRecord = dslContext.selectFrom(PET).where(PET.ID.eq(id)).fetchOne();
         if (petRecord != null) {
-            return new Pet(petRecord.getId(), petRecord.getName(), petRecord.getDescription(), petRecord.getType(), petRecord.getAge(), petRecord.getImagepath(), petRecord.getPetownerid());
+            return new Pet(petRecord.getId(), petRecord.getName(), petRecord.getDescription(), petRecord.getType(), petRecord.getAge(), petRecord.getImagepath(), petRecord.getPetownerid(), petRecord.getImage());
         } else {
             throw new ResourceNotFoundException("pet with id " + id + " not found");
         }

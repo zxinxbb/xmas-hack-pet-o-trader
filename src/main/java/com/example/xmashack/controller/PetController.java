@@ -12,7 +12,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/pets")
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 
 public class PetController {
 
@@ -24,10 +24,11 @@ public class PetController {
 
     @PostMapping
     public ResponseEntity<Pet> createPet(
-            @RequestPart Pet pet,
-            @RequestPart MultipartFile image) throws IOException {
+            @RequestBody Pet pet,
+            @RequestParam MultipartFile image) throws IOException {
 
         Pet savedPet = petRepository.insertPet(pet, image);
+        System.out.println(savedPet);
 
         return ResponseEntity.ok(savedPet);
     }
